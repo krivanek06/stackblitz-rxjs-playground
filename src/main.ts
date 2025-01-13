@@ -1,5 +1,5 @@
-import { Component, Injectable, effect, inject } from '@angular/core';
-import { bootstrapApplication } from '@angular/platform-browser';
+import { Component, Injectable, effect, inject } from "@angular/core";
+import { bootstrapApplication } from "@angular/platform-browser";
 import {
   timeout,
   Subject,
@@ -22,38 +22,39 @@ import {
   defer,
   from,
   raceWith,
-} from 'rxjs';
-import 'zone.js';
-import { AsyncPipe } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ExampleComponent1, FormTrackerComponent } from './example-1';
+} from "rxjs";
+import "zone.js";
+import { AsyncPipe } from "@angular/common";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { ExampleComponent1 } from "./example-1";
 import {
   loadingStatus,
   multiplyBy,
   multiplyByNew,
-} from './custom-rxjs-operators/loading-status';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { dataPolling } from './custom-rxjs-operators/data-polling';
-import { retryAttempt } from './custom-rxjs-operators/retry-attempt';
+} from "./custom-rxjs-operators/loading-status";
+import { HttpClient, provideHttpClient } from "@angular/common/http";
+import { dataPolling } from "./custom-rxjs-operators/data-polling";
+import { retryAttempt } from "./custom-rxjs-operators/retry-attempt";
+import { ExampleFormComponent } from "./components/example-form.component";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
-  imports: [AsyncPipe, FormTrackerComponent, ExampleComponent1],
+  imports: [AsyncPipe, ExampleFormComponent, ExampleComponent1],
   styles: `
     div {
       margin-bottom: 16px;
     }
   `,
   template: `
-  <!--<app-example-1 />-->
-  <app-form-tracker /> 
+    <!--<app-example-1 />-->
+    <app-example-form />
   `,
 })
 export class App {
   private http = inject(HttpClient);
-  testAPI = 'https://dummyjson.com/users/filter?key=hair.color&value=Brown';
-  testAPIError = 'https://err.com';
+  testAPI = "https://dummyjson.com/users/filter?key=hair.color&value=Brown";
+  testAPIError = "https://err.com";
 
   constructor() {
     const source$ = of(1, 2, 3);

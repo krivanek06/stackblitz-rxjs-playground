@@ -1,4 +1,4 @@
-import { Component, Injectable, effect, inject } from '@angular/core';
+import { Component, Injectable, effect, inject } from "@angular/core";
 import {
   timeout,
   Subject,
@@ -23,31 +23,31 @@ import {
   raceWith,
   debounceTime,
   distinctUntilChanged,
-} from 'rxjs';
+} from "rxjs";
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-} from '@angular/forms';
-import 'zone.js';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { objectChangedFields } from './custom-rxjs-operators/object-changed-fields';
-import { objectValueChanged } from './custom-rxjs-operators/object-value-change';
-import { rememberHistory } from './custom-rxjs-operators/remember-history';
+} from "@angular/forms";
+import "zone.js";
+import { AsyncPipe, CommonModule } from "@angular/common";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { objectChangedFields } from "./custom-rxjs-operators/object-changed-fields";
+import { objectValueChanged } from "./custom-rxjs-operators/object-value-change";
+import { rememberHistory } from "./custom-rxjs-operators/remember-history";
 
 type DataItem = {
   name: string;
   active: boolean;
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class NotificationService {
   private notification$ = new Subject<string>();
 
   listener$ = this.notification$.asObservable().pipe(
-    tap((val) => console.log('NotificationService', val)),
+    tap((val) => console.log("NotificationService", val)),
     scan((acc) => acc + 1, 0),
     shareReplay({ bufferSize: 1, refCount: false })
     // shareReplay({ bufferSize: 1, refCount: true })
@@ -59,120 +59,73 @@ export class NotificationService {
   }
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class UserAPIService {
   private data = [
-    { name: 'user1', active: true },
-    { name: 'user2', active: true },
-    { name: 'user3', active: false },
+    { name: "user1", active: true },
+    { name: "user2", active: true },
+    { name: "user3", active: false },
   ];
 
   getUsersPromise(val?: string): Promise<DataItem[]> {
     return new Promise((res) =>
       setTimeout(() => {
-        console.log('UserAPIService resolved', val);
+        console.log("UserAPIService resolved", val);
         res(this.data);
       }, 200)
     );
   }
 
   getUsers() {
-    return of(this.data).pipe(tap(() => console.log('UserAPIService')));
+    return of(this.data).pipe(tap(() => console.log("UserAPIService")));
   }
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class GroupAPIService {
   private data = [
-    { name: 'group1', active: true },
-    { name: 'group2', active: true },
-    { name: 'group3', active: false },
+    { name: "group1", active: true },
+    { name: "group2", active: true },
+    { name: "group3", active: false },
   ];
 
   getGroupPromise(val?: string): Promise<DataItem[]> {
     return new Promise((res) =>
       setTimeout(() => {
-        console.log('GroupAPIService resolved', val);
+        console.log("GroupAPIService resolved", val);
         res(this.data);
       }, 200)
     );
   }
 
   getGroups() {
-    return of(this.data).pipe(tap(() => console.log('GroupAPIService')));
+    return of(this.data).pipe(tap(() => console.log("GroupAPIService")));
   }
 }
 
 @Component({
-  selector: 'app-form-tracker',
+  selector: "app-example-1",
   standalone: true,
-  imports: [ReactiveFormsModule],
-  template: `
-    <form [formGroup]="myForm">
-      <label>
-        Name:
-        <input formControlName="name" />
-      </label>
-      <label>
-        Email:
-        <input formControlName="email" />
-      </label>
-      <label>
-        Age:
-        <input formControlName="age" type="number" />
-      </label>
-    </form>
-  `,
-})
-export class FormTrackerComponent {
-  myForm = inject(FormBuilder).nonNullable.group({
-    name: '',
-    email: '',
-    age: '',
-  });
-
-  constructor() {
-    // Track changes in the form
-    this.myForm.valueChanges
-      .pipe(
-        objectChangedFields(this.myForm.value)
-        // debounceTime(800),
-        // distinctUntilChanged()
-        //objectValueChanged()
-        //rememberHistory(4)
-      )
-      .subscribe((fieldChange) => {
-        console.log('Changed fieldsa:', fieldChange);
-      });
-  }
-}
-
-@Component({
-  selector: 'app-example-1',
-  standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule, FormTrackerComponent],
+  imports: [AsyncPipe, ReactiveFormsModule],
   styles: `
     div {
       margin-bottom: 16px;
     }
   `,
   template: `
-  <!--<app-form-tracker />-->
+    <!--<app-form-tracker />-->
     <label for="checkBox">check me</label>
     <input type="checkbox" name="checkBox" [formControl]="checkboxControl" />
 
     @if(displayItemsSignal(); as displayItemsSignal){
-
-      @if(displayItemsSignal.status === 'loaded'){
+    @if(displayItemsSignal.status === 'loaded'){
     <div>
-      results:
-      @for(item of displayItemsSignal.data; track item.name){
-        {{ item.name }}
+      results: @for(item of displayItemsSignal.data; track item.name){
+      {{ item.name }}
       }
     </div>
-      }
-    }
-<!-- 
+    } }
+    <!-- 
     <div>
       active:
       @for(item of activeItems$ | async; track item.name){
@@ -279,22 +232,22 @@ export class ExampleComponent1 {
     this.userAPIService.getUsers().pipe(
       delay(1300),
       map((data) => ({
-        status: 'loaded' as const,
+        status: "loaded" as const,
         data,
       })),
       startWith({
-        status: 'loading' as const,
+        status: "loading" as const,
       }),
       timeout({
         each: 1000,
-        with: () => of({ status: 'failed' as const }),
+        with: () => of({ status: "failed" as const }),
       })
     ),
-    { initialValue: { status: 'loading' as const } }
+    { initialValue: { status: "loading" as const } }
   );
 
   constructor() {
-    effect(() => console.log('displayItemsSignal', this.displayItemsSignal()));
+    effect(() => console.log("displayItemsSignal", this.displayItemsSignal()));
     // I want to subscribe maybe after some time
   }
 

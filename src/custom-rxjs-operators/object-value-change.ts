@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+import { FormGroup } from "@angular/forms";
 import {
   OperatorFunction,
   scan,
@@ -9,10 +9,11 @@ import {
   tap,
   MonoTypeOperatorFunction,
   filter,
-} from 'rxjs';
+} from "rxjs";
 
 /**
- * emits only when object values changed
+ * creates a deep comparision between previous and current state
+ * and emits only when object values changed (even for nested keys)
  */
 export function objectValueChanged<T extends Object>(
   config: {
@@ -22,10 +23,19 @@ export function objectValueChanged<T extends Object>(
   }
 ): MonoTypeOperatorFunction<Partial<T>> {
   // check which field changed in the form
-  const isObjectValueChange = (prev: Partial<T>, curr: Partial<T>) => {
-    return Object.keys(curr).some(
-      (key) => prev[key as keyof T] !== curr[key as keyof T]
-    );
+  const isObjectValueChange = (prev: Partial<T>, curr: Partial<T>): boolean => {
+    return Object.keys(curr).some((key) => {
+      // value can be anything - string, number, object, etc.
+      const previousValue = prev[key as keyof T] as any;
+      const currentValue = curr[key as keyof T] as any;
+
+      // if value is object - check child key and value changes
+      if (currentValue instanceof Object) {
+        return isObjectValueChange(previousValue, currentValue);
+      }
+
+      return previousValue !== currentValue;
+    });
   };
 
   return (source) =>
