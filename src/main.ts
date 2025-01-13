@@ -62,13 +62,13 @@ export class App {
     source$.pipe(multiplyByNew(6)).subscribe(console.log);
 
     this.http
-      .get(this.testAPIError)
+      .get(this.testAPI)
       .pipe(
-        dataPolling({
-          url: this.testAPIError,
-          reloadSeconds: 5,
-        }),
-        retryAttempt(),
+        // dataPolling({
+        //   url: this.testAPI,
+        //   reloadSeconds: 5,
+        // }),
+        //retryAttempt(),
         loadingStatus()
       )
       .subscribe(console.log);

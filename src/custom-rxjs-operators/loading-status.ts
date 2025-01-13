@@ -25,7 +25,7 @@ import {
   Observable,
   MonoTypeOperatorFunction,
   OperatorFunction,
-} from 'rxjs';
+} from "rxjs";
 
 // old format
 export function multiplyBy(number = 2) {
@@ -51,28 +51,32 @@ export function multiplyByNew(number = 2): MonoTypeOperatorFunction<number> {
 }
 
 type RxResourceResult<T> = {
-  state: 'loading' | 'loaded' | 'error';
+  state: "loading" | "loaded" | "error";
   isLoading: boolean;
   data: T | null;
   error?: unknown;
 };
 
+/**
+ * used mainly for API requests to include HTTP state and additional data
+ * about the HTTP call. Similar to rxResource
+ */
 export function loadingStatus<T>(): OperatorFunction<T, RxResourceResult<T>> {
   return (source) =>
     source.pipe(
       map((result) => ({
-        state: 'loaded' as const,
+        state: "loaded" as const,
         data: result,
       })),
       // // setup loading state
       startWith({
-        state: 'loading' as const,
+        state: "loading" as const,
         data: null,
       }),
       // // handle error state
       catchError((error) =>
         of({
-          state: 'error' as const,
+          state: "error" as const,
           error,
           data: null,
         })
@@ -82,7 +86,7 @@ export function loadingStatus<T>(): OperatorFunction<T, RxResourceResult<T>> {
         (result) =>
           ({
             ...result,
-            isLoading: result.state === 'loading',
+            isLoading: result.state === "loading",
           } satisfies RxResourceResult<T>)
       )
     );

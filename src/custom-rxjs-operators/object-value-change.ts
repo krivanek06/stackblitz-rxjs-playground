@@ -1,12 +1,8 @@
-import { FormGroup } from "@angular/forms";
 import {
-  OperatorFunction,
-  scan,
   startWith,
   map,
   pairwise,
   debounceTime,
-  tap,
   MonoTypeOperatorFunction,
   filter,
 } from "rxjs";
@@ -22,12 +18,15 @@ export function objectValueChanged<T extends Object>(
     debounceTime: 500,
   }
 ): MonoTypeOperatorFunction<Partial<T>> {
-  // check which field changed in the form
-  const isObjectValueChange = (prev: Partial<T>, curr: Partial<T>): boolean => {
+  // check if any field (evem mested) changed in the object
+  const isObjectValueChange = <K extends Object | {}>(
+    prev: K,
+    curr: K
+  ): boolean => {
     return Object.keys(curr).some((key) => {
       // value can be anything - string, number, object, etc.
-      const previousValue = prev[key as keyof T] as any;
-      const currentValue = curr[key as keyof T] as any;
+      const previousValue = prev[key as keyof K] as any;
+      const currentValue = curr[key as keyof K] as any;
 
       // if value is object - check child key and value changes
       if (currentValue instanceof Object) {
@@ -44,11 +43,11 @@ export function objectValueChanged<T extends Object>(
       startWith({}),
       // wait for user's input typing
       debounceTime(config.debounceTime),
-      // use previos and current form values
+      // use previos and current object values
       pairwise(),
-      // filter if form values changed
+      // only filter changed values for the object
       filter(([prev, curr]) => isObjectValueChange(prev, curr)),
-      // return current form values
+      // return current object
       map(([_, curr]) => curr)
     );
 }

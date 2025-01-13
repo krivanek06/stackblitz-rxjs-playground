@@ -9,10 +9,13 @@ import {
   tap,
   retry,
   timeout,
-} from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
+} from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { inject } from "@angular/core";
 
+/**
+ * continuously polls data from a provided URL
+ */
 export function dataPolling<T>(data: {
   url: string;
   reloadSeconds: number;
@@ -24,7 +27,7 @@ export function dataPolling<T>(data: {
       switchMap(() =>
         timer(0, data.reloadSeconds * 1000).pipe(
           // log reloading
-          tap(() => console.log('reloading', new Date())),
+          tap(() => console.log("reloading", new Date())),
           switchMap(() => http.get<T>(data.url))
         )
       )
