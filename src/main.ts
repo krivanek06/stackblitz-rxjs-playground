@@ -36,6 +36,7 @@ import { HttpClient, provideHttpClient } from "@angular/common/http";
 import { dataPolling } from "./custom-rxjs-operators/data-polling";
 import { retryAttempt } from "./custom-rxjs-operators/retry-attempt";
 import { ExampleFormComponent } from "./components/example-form.component";
+import { handleError } from "./custom-rxjs-operators/handle-error";
 
 @Component({
   selector: "app-root",
@@ -62,16 +63,17 @@ export class App {
     source$.pipe(multiplyByNew(6)).subscribe(console.log);
 
     this.http
-      .get(this.testAPI)
+      .get(this.testAPIError)
       .pipe(
         // dataPolling({
         //   url: this.testAPI,
         //   reloadSeconds: 5,
         // }),
         //retryAttempt(),
-        loadingStatus()
+        //loadingStatus()
+        handleError({ data: "no data" })
       )
-      .subscribe(console.log);
+      .subscribe((x) => console.log(x));
 
     // todo - maybe example with merge and scan to create memory ?
   }
