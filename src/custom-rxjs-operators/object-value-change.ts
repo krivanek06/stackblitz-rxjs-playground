@@ -10,6 +10,9 @@ import {
 /**
  * creates a deep comparision between previous and current state
  * and emits only when object values changed (even for nested keys)
+ *
+ * works similarly as distinctUntilChanged(), however this
+ * is used to object comparison instead of primitive values
  */
 export function objectValueChanged<T extends Object>(
   config: {
