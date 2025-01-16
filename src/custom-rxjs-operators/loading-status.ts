@@ -28,10 +28,10 @@ import {
 } from "rxjs";
 
 // old format
-export function multiplyBy(number = 2): MonoTypeOperatorFunction<number> {
+export function multiplyBy(val = 2): MonoTypeOperatorFunction<number> {
   return (source: Observable<number>): Observable<number> =>
     new Observable<number>((subscriber) => {
-      return source.pipe(map((d) => d * number)).subscribe({
+      return source.pipe(map((d) => d * val)).subscribe({
         next(value) {
           subscriber.next(value);
         },
@@ -46,8 +46,8 @@ export function multiplyBy(number = 2): MonoTypeOperatorFunction<number> {
 }
 
 // different format
-export function multiplyByNew(number = 2): MonoTypeOperatorFunction<number> {
-  return (source) => source.pipe(map((d) => d * number));
+export function multiplyByNew(val = 2): MonoTypeOperatorFunction<number> {
+  return (source) => source.pipe(map((d) => d * val));
 }
 
 type RxResourceResult<T> = {
