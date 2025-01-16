@@ -28,7 +28,7 @@ import {
 } from "rxjs";
 
 // old format
-export function multiplyBy(number = 2) {
+export function multiplyBy(number = 2): MonoTypeOperatorFunction<number> {
   return (source: Observable<number>): Observable<number> =>
     new Observable<number>((subscriber) => {
       return source.pipe(map((d) => d * number)).subscribe({

@@ -95,8 +95,8 @@ export class ExampleFormComponent {
     // Track changes in the form
     this.myForm.valueChanges
       .pipe(
+        debounceTime(800),
         objectChangedFields(this.myForm.value),
-        debounceTime(800)
         //distinctUntilChanged()
         //objectValueChanged()
         //rememberHistory(4)
