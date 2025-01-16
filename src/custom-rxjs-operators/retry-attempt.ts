@@ -1,20 +1,4 @@
-import {
-  MonoTypeOperatorFunction,
-  OperatorFunction,
-  switchMap,
-  startWith,
-  map,
-  timer,
-  Observable,
-  tap,
-  retry,
-  timeout,
-  EMPTY,
-  catchError,
-  expand,
-} from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { MonoTypeOperatorFunction, retry, timeout } from "rxjs";
 
 export function retryAttempt<T>(
   data: {

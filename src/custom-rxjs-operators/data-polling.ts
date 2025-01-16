@@ -1,15 +1,4 @@
-import {
-  MonoTypeOperatorFunction,
-  OperatorFunction,
-  switchMap,
-  startWith,
-  map,
-  timer,
-  Observable,
-  tap,
-  retry,
-  timeout,
-} from "rxjs";
+import { MonoTypeOperatorFunction, switchMap, timer, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { inject } from "@angular/core";
 
